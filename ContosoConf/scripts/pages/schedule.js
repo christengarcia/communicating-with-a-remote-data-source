@@ -8,6 +8,26 @@ var track2CheckBox = document.getElementById("show-track-2");
 //       The response will be a JSON object of the form "{ schedule: [ ... ] }"
 //       Save the array into the schedule variable
 //       Then call displaySchedule()
+function downloadSchedule() {
+    var request = new XMLHttpRequest;
+    request.open("GET", "/schedule/list", true);
+    request.onreadystatechange = function () {
+        if (request.readyState === 4) {
+            try {
+                var response = JSON.parse(request.responseText);
+                if (request.status === 200) {
+                    schedule = response.schedule;
+                    displaySchedule();
+                } else {
+                    alert(response.message);
+                }
+            } catch (exception) {
+                alert("Schedule list not available.");
+            }
+        }
+    };
+    request.send();
+}
 
 function createSessionElement(session) {
     var li = document.createElement("li");
