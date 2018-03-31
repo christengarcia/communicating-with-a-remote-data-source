@@ -71,6 +71,21 @@ function saveStar(sessionId, isStarred) {
     //       e.g. "starred=true" or "starred=false"
     //       The response contains a JSON object "{ starCount: <number> }"
     //       If the star count is more than 50, warn the user about this being a busy session.
+    var request = new XMLHttpRequest();
+    request.open("Post", "/schedule/star/" + sessionID, true);
+    if (isStarred) {
+        request.onreadystatechange = function () {
+            if (request.readyState === 4 && request.status === 200) {
+                var response = JSON.parse(request.responseText);
+                if (response.starCount > 50) {
+                    alert("This session is very popular! Be sure to arrive early to get a seat.");
+                }
+            }
+        };
+    }
+    request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    var data = "starred=" + isStarred;
+    request.send(data);
 }
 
 function handleListClick(event) {
